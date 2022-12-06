@@ -10,7 +10,7 @@ export default class World {
 
         // Wait for resources
         this.resources.on('ready', () => {
-            this.cine = new Cine()
+            this.cine = new Cine(this.experience.composer)
             this.environment = new Environment()
         })
     }

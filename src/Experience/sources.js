@@ -31,5 +31,10 @@ export default [
         name: 'camera',
         type: 'gltfModel',
         path: 'models/Projecteur/camera.glb'
+    },
+    {
+        name: 'chaises',
+        type: 'gltfModel',
+        path: 'models/Chairs/chaises.glb'
     }
 ]

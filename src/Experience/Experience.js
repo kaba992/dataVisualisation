@@ -5,6 +5,7 @@ import Sizes from './Utils/Sizes.js'
 import Time from './Utils/Time.js'
 import Camera from './Camera.js'
 import Renderer from './Renderer.js'
+import Composer from './World/Composer.js'
 import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 
@@ -38,6 +39,7 @@ export default class Experience
         this.camera = new Camera()
         this.renderer = new Renderer()
         this.world = new World()
+        this.composer = new Composer(this.scene, this.camera.instance, this.renderer.instance)
 
         // Resize event
         this.sizes.on('resize', () =>
@@ -62,7 +64,9 @@ export default class Experience
     {
         this.camera.update()
         this.world.update()
-        this.renderer.update()
+        // this.renderer.update()
+        this.composer.render()
+
     }
 
     destroy()
