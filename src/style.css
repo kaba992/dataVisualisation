@@ -1,20 +1,112 @@
-*
-{
-    margin: 0;
-    padding: 0;
+* {
+	margin: 0;
+	padding: 0;
+}
+ul {
+	list-style: none;
 }
 
 html,
-body
-{
-    overflow: hidden;
+body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	font-family: "Playfair Display", serif;
 }
 
-.webgl
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
-   
+.webgl {
+	position: fixed;
+	top: 0;
+	left: 0;
+	outline: none;
 }
+
+.timeline {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.timeline__bar {
+	position: absolute;
+	bottom: 100px;
+	left: 50%;
+	transform: translate(-50%, 0);
+	width: 50%;
+	height: 15px;
+	background: #f85032; /* fallback for old browsers */
+	background: -webkit-linear-gradient(
+		to right,
+		#f85032,
+		#e73827
+	); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(
+		to right,
+		#f85032,
+		#e73827
+	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	z-index: 1;
+	border-radius: 50px;
+}
+
+.timeline__dots {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+.timeline__dot {
+	position: relative;
+	width: 15px;
+	height: 15px;
+}
+
+.timeline__dot::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	content: "";
+	width: 100%;
+	height: 100%;
+	background: #ffffff;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: transform 0.5s ease;
+	transform: scale(1.5);
+}
+
+.timeline__dot:hover::after {
+	transform: scale(1.8);
+}
+
+.dot {
+	position: absolute;
+	top: 34px;
+	left: 50%;
+	color: white;
+	font-size: 1.2rem;
+	text-align: center;
+	transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.dot::after {
+	content: "";
+	position: absolute;
+	bottom: 45px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 2px;
+	height: 10px;
+	background: #e73827;
+}
+
+/* .active {
+  transform: scale(1.5);
+  position: absolute;
+	bottom: 40px;
+	left: -20px;
+	height: 80px;
+	width: 60px;
+	background: white;
+} */
