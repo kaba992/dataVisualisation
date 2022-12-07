@@ -23,18 +23,35 @@ export default class Cine {
     this.loader = document.querySelector('.loader')
 
     // loader
-    const number = document.querySelector(".number");
-    const countdown = 9;
-    let counter = countdown;
-    number.innerHTML = counter;
+    // const number = document.querySelector(".number");
+    // const countdown = 4;
+    // let counter = countdown;
+    // number.innerHTML = counter;
 
-    setInterval(() => {
-      counter--;
-      number.innerHTML = counter;
-      if (counter === 1) {
+    // setInterval(() => {
+    //   counter--;
+    //   number.innerHTML = counter;
+    //   if (counter === 0) {
+    //     this.loader.style.display = 'none'
+    //   }
+    // }, 1000);
+  
+
+
+    const animationLoad = lottie.loadAnimation({
+      container: this.loader, // the dom loading that will contain the animation
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: "https://assets4.lottiefiles.com/datafiles/397tkqLfSbPbfm9/data.json", // the path to the animation json
+      // preserveAspectRatio: 'xMidYMid meet',
+    });
+
+    animationLoad.play();
+    setTimeout(() => {
         this.loader.style.display = 'none'
-      }
-    }, 1000);
+      
+    }, 4000);
 
 
     this.setModel()
@@ -52,23 +69,24 @@ export default class Cine {
         this.videoPlane.visible = true
         this.cameraInit = true
         this.timelineBar.style.display = 'block'
+        this.loaderPlane.visible = false
 
       }
     })
-    camAnim.to(this.projector.rotation, { z: 0, duration: 1 })
+    camAnim.to(this.projector.rotation, { z: 0, duration: 3 })
   }
   setModel() {
     this.model = this.resources.items.camera.scene
-    // this.chairs = this.resources.items.chaises.scene
-    // this.chairs.rotation.y = Math.PI
-    // this.chairs.position.set(0, -14, -6)
-    // this.chairs.scale.set(2.5, 2.5, 2.5)
+    this.chairs = this.resources.items.chaises.scene
+    this.chairs.rotation.y = Math.PI
+    this.chairs.position.set(0, -14, -6)
+    this.chairs.scale.set(2.5, 2.5, 2.5)
     this.projector = this.model.getObjectByName('camera')
     this.model.scale.set(3, 3, 3)
     this.model.position.set(0, -14, 0)
     this.model.rotation.y = Math.PI * 0.5
     this.scene.add(this.model)
-    // this.scene.add(this.chairs)
+    this.scene.add(this.chairs)
     this.cameraButton = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32),
       new THREE.MeshBasicMaterial({ color: 0xff0000 }))
     this.model.add(this.cameraButton)
@@ -95,10 +113,18 @@ export default class Cine {
   }
   setVideo() {
     const welcome = new THREE.TextureLoader().load('textures/datas/welcome.jpg');
-    const video = document.getElementById('video');
-    const videoTexture = new THREE.VideoTexture(video);
-    video.play();
-    video.loop = true;
+    this.video = document.getElementById('video');
+    const videoTexture = new THREE.VideoTexture(this.video);
+ 
+  
+    const loaderGeo = new THREE.PlaneGeometry(55, 35, 128, 128);
+    const loaderMat = new THREE.MeshBasicMaterial({ map: videoTexture });
+    this.loaderPlane = new THREE.Mesh(loaderGeo, loaderMat);
+    this.loaderPlane.position.set(0, -12, -89.99);
+    this.scene.add(this.loaderPlane);
+    this.loaderPlane.visible = false
+
+
     // videoTexture.flipY = false;
     const videoPlaneGeometry = new THREE.PlaneGeometry(55, 35, 128, 128);
     const videoPlaneMaterial = new THREE.ShaderMaterial({
@@ -228,6 +254,10 @@ export default class Cine {
           this.initCamera()
           console.log('camera');
           this.cameraButton.visible = false;
+          this.loaderPlane.visible = true
+          this.video.play();
+          this.video.loop = false;
+
         }
       })
     }
@@ -235,13 +265,13 @@ export default class Cine {
     if (this.intersect.length) {
       if (this.currentIntersect) {
         this.intersectPoint = this.intersect[0].point;
-        this.videoPlane.position.set(this.intersectPoint.x, -10, this.intersectPoint.z + 0.01);
+        this.videoPlane.position.set(this.intersectPoint.x, -10, this.intersectPoint.z + 0.1);
         this.spotLight.target.position.set(this.intersectPoint.x, this.intersectPoint.y, this.intersectPoint.z);
         const normalized = this.intersectPoint.clone().normalize();
         // this.projector.rotation.y = Math.PI * 0.5
 
 
-        if (this.cameraIni) {
+        if (this.cameraInit) {
           this.projector.rotation.y = normalized.x * -1
 
         }
