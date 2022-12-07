@@ -11,40 +11,41 @@
 <body>
   <video src="/static/textures/video.mp4" , autoplay, loop, muted="muted" , crossorigin="anonymous" ,
     playsinline,webkit-playsinline, style="display: none; position: absolute; left: 15px; top: 75px" id="video"></video>
+    <div class="loader">
+      <div class="screen"></div>
+      <div class="lines"></div>
+      <div class="number"></div>
+    </div>
   <div class="timeline">
     <div class="timeline__bar">
       <div class="timeline__progress"></div>
       <ul class="timeline__dots">
-        <li class="timeline__dot ">
-          <span class="dot">1992 <br />
-            IrishMan</span>
+        <li class="timeline__dot " data-image="data1">
+          <span class="dot">1992 </span>
         </li>
-        <li class="timeline__dot">
-          <span class="dot">1989 <br />
-            BananaSplit</span>
+        <li class="timeline__dot" data-image="data2">
+          <span class="dot">1989 </span>
         </li>
-        <li class="timeline__dot">
-          <span class="dot">1993 <br />
-            Taratata</span>
+        <li class="timeline__dot" data-image="data3">
+          <span class="dot">1993 </span>
 
 
         </li>
-        <li class="timeline__dot">
-          <span class="dot">1994 <br />
-            BambinoBam</span>
+        <li class="timeline__dot" data-image="data4">
+          <span class="dot">1994 </span>
 
 
         </li>
-        <li class="timeline__dot">
-          <span class="dot">1995 <br />
-            PatateLand</span>
+        <li class="timeline__dot" data-image="data5">
+          <span class="dot">1995</span>
 
         </li>
       </ul>
     </div>
   </div>
-  
-    <script type="x-shader/x-vertex" id="vertexshader">
+
+
+  <script type="x-shader/x-vertex" id="vertexshader">
 
 			varying vec2 vUv;
 
@@ -58,7 +59,7 @@
 
 		</script>
 
-    <script type="x-shader/x-fragment" id="fragmentshader">
+  <script type="x-shader/x-fragment" id="fragmentshader">
 
 			uniform sampler2D baseTexture;
 			uniform sampler2D bloomTexture;
@@ -73,7 +74,7 @@
 
 		</script>
 
-    
+
   <canvas class="webgl"></canvas>
 </body>
 

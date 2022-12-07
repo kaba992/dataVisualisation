@@ -1,11 +1,11 @@
 export const fragmentShader = `
 varying vec2 vUv;
 // uniform sampler for texture video
-uniform sampler2D video;
+uniform sampler2D uTexture;
 
 void main()
 {
-    gl_FragColor = texture2D(video, vUv);
+    gl_FragColor = texture2D(uTexture, vUv);
 }
 `;
 
