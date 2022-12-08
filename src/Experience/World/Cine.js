@@ -21,7 +21,10 @@ export default class Cine {
     this.cameraInit = false
     this.timelineBar = document.querySelector('.timeline__bar')
     this.loader = document.querySelector('.loader')
-
+    this.filters = document.querySelectorAll('.filter')
+    this.filterWrapper = document.querySelector('.filters')
+    this.filterText = document.querySelector('.text-content')
+    gsap.set(this.timelineBar, { width: 0 })
     // loader
     // const number = document.querySelector(".number");
     // const countdown = 4;
@@ -35,23 +38,22 @@ export default class Cine {
     //     this.loader.style.display = 'none'
     //   }
     // }, 1000);
-  
 
 
-    const animationLoad = lottie.loadAnimation({
-      container: this.loader, // the dom loading that will contain the animation
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: "https://assets4.lottiefiles.com/datafiles/397tkqLfSbPbfm9/data.json", // the path to the animation json
-      // preserveAspectRatio: 'xMidYMid meet',
-    });
 
-    animationLoad.play();
-    setTimeout(() => {
-        this.loader.style.display = 'none'
-      
-    }, 4000);
+    // const animationLoad = lottie.loadAnimation({
+    //   container: this.loader, // the dom loading that will contain the animation
+    //   renderer: 'svg',
+    //   loop: true,
+    //   autoplay: true,
+    //   path: "https://assets4.lottiefiles.com/datafiles/397tkqLfSbPbfm9/data.json", // the path to the animation json
+    //   // preserveAspectRatio: 'xMidYMid meet',
+    // });
+
+    // animationLoad.play();
+
+    this.loader.style.display = 'none'
+
 
 
     this.setModel()
@@ -70,6 +72,8 @@ export default class Cine {
         this.cameraInit = true
         this.timelineBar.style.display = 'block'
         this.loaderPlane.visible = false
+        gsap.to(this.timelineBar, { width: '50%', duration: 1, ease: 'none'})
+
 
       }
     })
@@ -115,8 +119,8 @@ export default class Cine {
     const welcome = new THREE.TextureLoader().load('textures/datas/welcome.jpg');
     this.video = document.getElementById('video');
     const videoTexture = new THREE.VideoTexture(this.video);
- 
-  
+
+
     const loaderGeo = new THREE.PlaneGeometry(55, 35, 128, 128);
     const loaderMat = new THREE.MeshBasicMaterial({ map: videoTexture });
     this.loaderPlane = new THREE.Mesh(loaderGeo, loaderMat);
@@ -173,20 +177,31 @@ export default class Cine {
       this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     })
     // const chairsIntersect = this.raycaster.intersectObject(this.chairs, true)
-
-
-    function update() {
-      console.log("test");
-      requestAnimationFrame(update);
-    }
-    update();
   }
   setTimeline() {
-    const data1 = new THREE.TextureLoader().load('textures/datas/data1.jpg');
-    const data2 = new THREE.TextureLoader().load('textures/datas/data2.jpg');
-    const data3 = new THREE.TextureLoader().load('textures/datas/data3.jpg');
-    const data4 = new THREE.TextureLoader().load('textures/datas/data4.jpg');
-    const data5 = new THREE.TextureLoader().load('textures/datas/data5.jpeg');
+    const datas = {
+      data1: new THREE.TextureLoader().load('textures/datas/data1.jpg'),
+      data2: new THREE.TextureLoader().load('textures/datas/data2.jpg'),
+      data3: new THREE.TextureLoader().load('textures/datas/data3.jpg'),
+      data4: new THREE.TextureLoader().load('textures/datas/data4.jpg'),
+      data5: new THREE.TextureLoader().load('textures/datas/data5.jpeg'),
+    }
+    const test1 = {
+      data1: new THREE.TextureLoader().load('textures/datas/test1.jpg'),
+      data2: new THREE.TextureLoader().load('textures/datas/test2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/test3.png'),
+    }
+    const test2 = {
+      data1: new THREE.TextureLoader().load('textures/datas/test3.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/test2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/test1.jpg'),
+    }
+    // const test3 = {
+    //   data1: new THREE.TextureLoader().load('textures/datas/test7.jpg'),
+    //   data2: new THREE.TextureLoader().load('textures/datas/test8.jpg'),
+    //   data3: new THREE.TextureLoader().load('textures/datas/test9.jpg'),
+    // }
+
 
     const timelineDots = document.querySelectorAll('.timeline__dot');
     timelineDots.forEach((dot) => {
@@ -198,18 +213,63 @@ export default class Cine {
           this.videoPlane.visible = true;
 
         }, 500);
+        gsap.fromTo(this.filterWrapper, { opacity: 0 }, { opacity: 1, duration: 0.5 })
+
+
         const data = dot.getAttribute('data-image');
         if (data === 'data1') {
-          this.videoPlane.material.uniforms.uTexture.value = data1;
+          this.videoPlane.material.uniforms.uTexture.value = datas.data1;
+          this.filters.forEach((filter) => {
+            filter.addEventListener('click', (e) => {
+
+              if (e.target.classList.contains("filter1")) {
+                this.videoPlane.visible = false;
+                setTimeout(() => {
+                  this.videoPlane.visible = true;
+                }, 500);
+                this.videoPlane.material.uniforms.uTexture.value = test1.data1;
+              }
+              else if (e.target.classList.contains("filter2")) {
+                this.videoPlane.visible = false;
+                setTimeout(() => {
+                  this.videoPlane.visible = true;
+                }, 500);
+                this.videoPlane.material.uniforms.uTexture.value = test1.data2;
+
+              }
+              else if (e.target.classList.contains("filter3")) {
+                this.videoPlane.visible = false;
+                setTimeout(() => {
+                  this.videoPlane.visible = true;
+                }, 500);
+                this.videoPlane.material.uniforms.uTexture.value = test1.data3;
+              }
+            });
+          });
 
         } else if (data === 'data2') {
-          this.videoPlane.material.uniforms.uTexture.value = data2;
+          this.videoPlane.material.uniforms.uTexture.value = datas.data2;
+          this.filters.forEach((filter) => {
+            filter.addEventListener('click', (e) => {
+
+              if (e.target.classList.contains("filter1")) {
+                this.videoPlane.material.uniforms.uTexture.value = test2.data1;
+              }
+              else if (e.target.classList.contains("filter2")) {
+                this.videoPlane.material.uniforms.uTexture.value = test2.data2;
+
+              }
+              else if (e.target.classList.contains("filter3")) {
+                this.videoPlane.material.uniforms.uTexture.value = test2.data3;
+              }
+            });
+          });
         } else if (data === 'data3') {
-          this.videoPlane.material.uniforms.uTexture.value = data3;
+          this.videoPlane.material.uniforms.uTexture.value = datas.data3;
         } else if (data === 'data4') {
-          this.videoPlane.material.uniforms.uTexture.value = data4;
+          this.videoPlane.material.uniforms.uTexture.value = datas.data4;
         } else if (data === 'data5') {
-          this.videoPlane.material.uniforms.uTexture.value = data5;
+          this.videoPlane.material.uniforms.uTexture.value = datas.data5;
         }
       });
     });
@@ -265,11 +325,10 @@ export default class Cine {
     if (this.intersect.length) {
       if (this.currentIntersect) {
         this.intersectPoint = this.intersect[0].point;
-        this.videoPlane.position.set(this.intersectPoint.x, -10, this.intersectPoint.z + 0.1);
+        // this.videoPlane.position.set(this.intersectPoint.x, -10, this.intersectPoint.z + 0.1);
         this.spotLight.target.position.set(this.intersectPoint.x, this.intersectPoint.y, this.intersectPoint.z);
         const normalized = this.intersectPoint.clone().normalize();
         // this.projector.rotation.y = Math.PI * 0.5
-
 
         if (this.cameraInit) {
           this.projector.rotation.y = normalized.x * -1

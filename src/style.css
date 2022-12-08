@@ -36,8 +36,8 @@ body {
 	overflow: hidden;
 	box-shadow: inset 0 0 5em 1em #000;
 	background: #4f4f4f;
-	z-index: 1;
-	/* display: 'none' !important; */
+	z-index: -2;
+	 display: 'none' !important;
 }
 .timeline__bar {
 	display: none;
@@ -124,7 +124,7 @@ body {
 	width: 60px;
 	background: white;
 } */
-/* 
+/*
 .lines::before {
 	content: "";
 	top: 50%;
@@ -222,3 +222,35 @@ body {
 	top: 50%;
 	transform: translate(-50%, -50%);
 } */
+
+.filters {
+	position: absolute;
+	top: 0;
+	left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  font-family: "Playfair Display", serif;
+	height: 30%;
+	width: 20%;
+	margin-top: 2rem;
+	margin-left: 2rem;
+	z-index: 1;
+  gap: 2rem;
+  color: white;
+  opacity: 0;
+}
+.filter{
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.illustration {
+width: 60px;
+height: 20px;
+background: #ffffff;
+align-items: center;
+}
