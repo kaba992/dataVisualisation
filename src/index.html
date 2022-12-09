@@ -4,35 +4,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet">
   <title>26 - Code structuring</title>
 </head>
 
 <body>
-  <video src="/static/textures/countDown.mp4" , autoplay, loop, muted="muted" , crossorigin="anonymous" ,
+  <video src="/static/textures/countDown.mp4" , autoplay, loop , crossorigin="anonymous" ,
     playsinline,webkit-playsinline, style="display: none; position: absolute; left: 15px; top: 75px" id="video"></video>
   <div class="loader">
-    <div class="screen"></div>
-    <div class="lines"></div>
-    <div class="number"></div>
+    <div class="loaderText">
+      <span class="textAnim">Cinéma français :</span><br />
+      <span class="textAnim">un art essentiel </span><br />
+      <span class="textAnim">une industrie menacée.</span><br />
+    </div>
+    <img src="/static/textures/datas/Frame 4.png" alt="" class="loaderImg" style="width: 137px;">
   </div>
   <div class="timeline">
     <div class="filters">
       <div class="filter " style="width: 310px;
       height: 56px;">
-        <img class="illustration " src="/static/textures/datas/entrées.png" alt="filterImg" style="width: 64px;
-        height: 29px;"></img>
-        <span class="text-content filter1" style="width: 170px;
-        height: 27px;">Entrées au cinéma</span>
+
+        <span class="text-content filter1">Entrées au cinéma</span>
       </div>
       <div class="filter">
-        <img class="illustration " src="/static/textures/datas/abonnements.png" alt="filterImg"></img>
+
         <span class="text-content filter2">Abonnements Netflix</span>
       </div>
       <div class="filter ">
-        <img class="illustration " src="/static/textures/datas/productions.png" alt="filterImg"></img>
+
         <span class="text-content filter3">Productions françaises</span>
       </div>
+    </div>
+    <div class="zoom_dezoom">
+      <img src="/static/textures/datas/zoom.png" alt="zoom" class="zoom">
+      <img src="/static/textures/datas/unzoom.png" alt="unzoom" class="unzoom">
     </div>
     <div class="timeline__bar">
       <div class="timeline__progress"></div>

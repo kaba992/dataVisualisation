@@ -25,23 +25,31 @@ export default class Cine {
     this.filterWrapper = document.querySelector('.filters')
     this.filterText = document.querySelector('.text-content')
     this.debug = this.Experience.debug
+    this.zoom = document.querySelector('.zoom')
+    this.unZoom = document.querySelector('.unzoom')
+    this.start = document.querySelector('.loaderImg')
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder('cone')
     }
     gsap.set(this.timelineBar, { width: 0 })
-    // loader
-    // const number = document.querySelector(".number");
-    // const countdown = 4;
-    // let counter = countdown;
-    // number.innerHTML = counter;
-
-    // setInterval(() => {
-    //   counter--;
-    //   number.innerHTML = counter;
-    //   if (counter === 0) {
-    //     this.loader.style.display = 'none'
-    //   }
-    // }, 1000);
+   this.zoomClicked = false
+   this.unZoomClicked = false
+  this.zoom.addEventListener('click', () => {
+    this.zoomClicked = true
+    this.unZoomClicked = false
+    this.timelineBar.style.display = 'none'
+  })
+  this.unZoom.addEventListener('click', () => {
+    this.unZoomClicked = true
+    this.zoomClicked = false
+    this.timelineBar.style.display = 'block'
+  })
+  this.start.addEventListener('click', () => {
+    gsap.to(this.loader, { opacity: 0, duration: 1 })
+    setTimeout(() => {
+    this.loader.style.display = 'none'
+    }, 2000);
+  })
 
 
 
@@ -56,7 +64,7 @@ export default class Cine {
 
     // animationLoad.play();
 
-    this.loader.style.display = 'none'
+    // this.loader.style.display = 'none'
 
 
 
@@ -64,10 +72,16 @@ export default class Cine {
     this.setWall()
     this.setVideo()
     this.setRaycaster()
-    this.setSpotLight()
+    // this.setSpotLight()
     this.setTimeline()
     this.setPointLight()
+    this.setLoaderAnim()
 
+  }
+  setLoaderAnim() {
+    const loaderAnim = document.querySelectorAll('.textAnim')
+    const loadArray = Array.from(loaderAnim).reverse()
+    // gsap.to(loadArray, 1, { top: 50, opacity: 1, stagger: 0.2 })
   }
   initCamera() {
     let camAnim = gsap.timeline({
@@ -84,9 +98,11 @@ export default class Cine {
               this.loaderPlane.visible = false
               this.videoPlane.visible = true
               this.timelineBar.style.display = 'block'
+              this.zoom.style.display = 'block'
+              this.unZoom.style.display = 'block'
             }, 3000)
 
-        
+
         // coneAnim.to(this.cone.scale, { x: 3.74, y: 3, z: 2.7, duration: 1 })
       }
     })
@@ -115,9 +131,9 @@ export default class Cine {
     this.cone.rotation.x = 1.484
    this.cone.visible = false
     //set the cone geometry height to 0 with gsap
-    
-   
-   
+
+
+
 
     if (this.debug.active) {
       this.debugFolder.add(this.cone.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('RotationconeX')
@@ -187,7 +203,7 @@ export default class Cine {
 
     })
     this.videoPlane = new THREE.Mesh(videoPlaneGeometry, videoPlaneMaterial)
-    this.videoPlane.position.set(0, -12, -89.99)
+    this.videoPlane.position.set(0, -12, -89)
     this.scene.add(this.videoPlane)
     this.videoPlane.visible = false
 
@@ -259,18 +275,26 @@ export default class Cine {
       })
 
     }
+    function resetSelectedItem(){
+      const selectedItem = document.querySelectorAll('.selectedItem')
+      selectedItem.forEach((item) => {
+        item.classList.remove('selectedItem')
+      })
+    }
 
     const timelineDots = document.querySelectorAll('.timeline__dot');
-    function setFilter(data, target, firstData, secondData, thirdData) {
+    function setFilter(data, target,target2, firstData, secondData, thirdData) {
       data.forEach((filter) => {
         filter.addEventListener('click', (e) => {
           console.log(e.target.classList);
           if (e.target.classList.contains("filter1")) {
             resetRadial()
-            filter.classList.add('radial')
+            e.target.classList.add('radial')
             target.visible = false;
+            target2.visible = false;
             setTimeout(() => {
               target.visible = true;
+              target2.visible = true;
             }, 500);
             target.material.uniforms.uTexture.value = firstData;
           }
@@ -279,20 +303,24 @@ export default class Cine {
           }
           if (e.target.classList.contains("filter2")) {
             resetRadial(filter)
-            filter.classList.add('radial')
+            e.target.classList.add('radial')
             target.visible = false;
+            target2.visible = false;
             setTimeout(() => {
               target.visible = true;
+              target2.visible = true;
             }, 500);
             target.material.uniforms.uTexture.value = secondData;
             console.log('filter2');
           }
           if (e.target.classList.contains("filter3")) {
             resetRadial()
-            filter.classList.add('radial')
+            e.target.classList.add('radial')
             target.visible = false;
+            target2.visible = false;
             setTimeout(() => {
               target.visible = true;
+              target2.visible = true;
             }, 500);
             target.material.uniforms.uTexture.value = thirdData;
             console.log('filter3');
@@ -316,20 +344,30 @@ export default class Cine {
         const data = dot.getAttribute('data-image');
         if (data === 'data1') {
           this.videoPlane.material.uniforms.uTexture.value = data1.data1;
-          setFilter(this.filters, this.videoPlane, data1.data1, data1.data2, data1.data3);
+          setFilter(this.filters, this.videoPlane,this.cone, data1.data1, data1.data2, data1.data3);
+          resetSelectedItem()
+          dot.classList.add('selectedItem')
 
         } else if (data === 'data2') {
           this.videoPlane.material.uniforms.uTexture.value = data2.data1;
-          setFilter(this.filters, this.videoPlane, data2.data1, data2.data2, data2.data3);
+          setFilter(this.filters, this.videoPlane,this.cone, data2.data1, data2.data2, data2.data3);
+          resetSelectedItem()
+          dot.classList.add('selectedItem')
         } else if (data === 'data3') {
           this.videoPlane.material.uniforms.uTexture.value = data3.data1;
-          setFilter(this.filters, this.videoPlane, data3.data1, data3.data2, data3.data3);
+          setFilter(this.filters, this.videoPlane,this.cone, data3.data1, data3.data2, data3.data3);
+          resetSelectedItem()
+          dot.classList.add('selectedItem')
         } else if (data === 'data4') {
           this.videoPlane.material.uniforms.uTexture.value = data4.data1;
-          setFilter(this.filters, this.videoPlane, data4.data1, data4.data2, data4.data3);
+          setFilter(this.filters, this.videoPlane,this.cone, data4.data1, data4.data2, data4.data3);
+          resetSelectedItem()
+          dot.classList.add('selectedItem')
         } else if (data === 'data5') {
           this.videoPlane.material.uniforms.uTexture.value = data5.data1;
-          setFilter(this.filters, this.videoPlane, data5.data1, data5.data2, data5.data3);
+          setFilter(this.filters, this.videoPlane,this.cone, data5.data1, data5.data2, data5.data3);
+          resetSelectedItem()
+          dot.classList.add('selectedItem')
         }
       });
     });
@@ -360,16 +398,37 @@ export default class Cine {
 
   }
 
+  zoomCamera() {
+    // gest distance between camera and videoplane
+    const distance = this.camera.position.distanceTo(this.videoPlane.position);
+    // lerping camera position to videoplane position and look at videoplane
+    gsap.to(this.camera.position, { x: this.videoPlane.position.x, y: this.videoPlane.position.y, z: -35, duration: 3, ease: "power4.out" });
+    this.camera.lookAt(this.videoPlane.position);
+    // reduce camera focus
+
+  }
+  unZoomCamera() {
+    gsap.to(this.camera.position, { x: 0, y: 10, z: 30, duration: 3, ease: "power4.out" });
+    this.camera.lookAt(0,-22,-89);
+    // this.camera.lookAt(0, 0, 0);
+  }
+
   update() {
     this.time += 0.02
     this.raycaster.setFromCamera(this.mouse, this.camera);
     this.intersect = this.raycaster.intersectObject(this.wall);
     this.intersectButtun = this.raycaster.intersectObject(this.cameraButton);
 
+    if(this.zoomClicked){
+      this.zoomCamera()
+    }
+    if(this.unZoomClicked){
+      this.unZoomCamera()
+    }
+
     if (this.intersectButtun.length) {
       window.addEventListener('click', () => {
         // console.log(this.intersectButtun[0].object.name);
-
         if (this.intersectButtun[0] && this.intersectButtun[0].object.name === 'cameraButton') {
           this.initCamera()
           console.log('camera');
@@ -383,7 +442,7 @@ export default class Cine {
       if (this.currentIntersect) {
         this.intersectPoint = this.intersect[0].point;
         // this.videoPlane.position.set(this.intersectPoint.x, -10, this.intersectPoint.z + 0.1);
-        this.spotLight.target.position.set(this.intersectPoint.x, this.intersectPoint.y, this.intersectPoint.z);
+        // this.spotLight.target.position.set(this.intersectPoint.x, this.intersectPoint.y, this.intersectPoint.z);
         const normalized = this.intersectPoint.clone().normalize();
         // this.projector.rotation.y = Math.PI * 0.5
 
@@ -393,7 +452,7 @@ export default class Cine {
         // }
         // this.projector.rotation.z = normalized.y * 1
 
-        this.spotLight.lookAt(this.intersect[0].point)
+        // this.spotLight.lookAt(this.intersect[0].point)
 
       }
       this.currentIntersect = this.intersect[0]

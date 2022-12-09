@@ -34,7 +34,7 @@ export default [
     },
     {
         name: 'chaises',
-        type: 'gltfModel',
-        path: 'models/Chairs/chaises.glb'
+        type: 'dracoLoader',
+        path: 'models/Chairs/chaisesCompress.glb'
     }
 ]
