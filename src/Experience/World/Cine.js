@@ -24,6 +24,10 @@ export default class Cine {
     this.filters = document.querySelectorAll('.filter')
     this.filterWrapper = document.querySelector('.filters')
     this.filterText = document.querySelector('.text-content')
+    this.debug = this.Experience.debug
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder('cone')
+    }
     gsap.set(this.timelineBar, { width: 0 })
     // loader
     // const number = document.querySelector(".number");
@@ -68,20 +72,36 @@ export default class Cine {
   initCamera() {
     let camAnim = gsap.timeline({
       onComplete: () => {
-        this.videoPlane.visible = true
         this.cameraInit = true
-        this.timelineBar.style.display = 'block'
+
         this.loaderPlane.visible = false
-        gsap.to(this.timelineBar, { width: '50%', duration: 1, ease: 'none'})
+        gsap.to(this.timelineBar, { width: '50%', duration: 1, ease: 'none' })
+             this.cone.visible = true
+            this.loaderPlane.visible = true
+            this.video.play();
+            this.video.loop = false;
+            setTimeout(() => {
+              this.loaderPlane.visible = false
+              this.videoPlane.visible = true
+              this.timelineBar.style.display = 'block'
+            }, 3000)
 
-
+        
+        // coneAnim.to(this.cone.scale, { x: 3.74, y: 3, z: 2.7, duration: 1 })
       }
     })
-    camAnim.to(this.projector.rotation, { z: 0, duration: 3 })
+    camAnim.to(this.projector.rotation, { z: 0, duration: 1.5, ease: 'power2.out' })
   }
   setModel() {
     this.model = this.resources.items.camera.scene
     this.chairs = this.resources.items.chaises.scene
+    this.coneGeo = new THREE.ConeGeometry(10, 40, 32)
+    const coneMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.05,
+    })
+    this.cone = new THREE.Mesh(this.coneGeo, coneMat)
     this.chairs.rotation.y = Math.PI
     this.chairs.position.set(0, -14, -6)
     this.chairs.scale.set(2.5, 2.5, 2.5)
@@ -89,8 +109,27 @@ export default class Cine {
     this.model.scale.set(3, 3, 3)
     this.model.position.set(0, -14, 0)
     this.model.rotation.y = Math.PI * 0.5
-    this.scene.add(this.model)
-    this.scene.add(this.chairs)
+    this.scene.add(this.model, this.chairs, this.cone)
+    this.cone.position.set(-0.25, -11.05, -62)
+    this.cone.scale.set(3.74, 3, 2.7)
+    this.cone.rotation.x = 1.484
+   this.cone.visible = false
+    //set the cone geometry height to 0 with gsap
+    
+   
+   
+
+    if (this.debug.active) {
+      this.debugFolder.add(this.cone.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('RotationconeX')
+      this.debugFolder.add(this.cone.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.0001).name('RotationconeY')
+      this.debugFolder.add(this.cone.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.0001).name('RotationconeZ')
+      this.debugFolder.add(this.cone.position, 'x').min(-90).max(15).step(0.01).name('PositionconeX')
+      this.debugFolder.add(this.cone.position, 'y').min(-90).max(15).step(0.01).name('PositionconeY')
+      this.debugFolder.add(this.cone.position, 'z').min(-90).max(15).step(0.01).name('PositionconeZ')
+      this.debugFolder.add(this.cone.scale, 'x').min(0).max(10).step(0.01).name('coneScaleX')
+      this.debugFolder.add(this.cone.scale, 'y').min(0).max(10).step(0.01).name('coneScaleY')
+      this.debugFolder.add(this.cone.scale, 'z').min(0).max(10).step(0.01).name('coneScaleZ')
+    }
     this.cameraButton = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32),
       new THREE.MeshBasicMaterial({ color: 0xff0000 }))
     this.model.add(this.cameraButton)
@@ -116,7 +155,7 @@ export default class Cine {
     this.scene.add(plane)
   }
   setVideo() {
-    const welcome = new THREE.TextureLoader().load('textures/datas/welcome.jpg');
+    const welcome = new THREE.TextureLoader().load('textures/datas/welcome.png');
     this.video = document.getElementById('video');
     const videoTexture = new THREE.VideoTexture(this.video);
 
@@ -186,24 +225,82 @@ export default class Cine {
       data4: new THREE.TextureLoader().load('textures/datas/data4.jpg'),
       data5: new THREE.TextureLoader().load('textures/datas/data5.jpeg'),
     }
-    const test1 = {
-      data1: new THREE.TextureLoader().load('textures/datas/test1.jpg'),
-      data2: new THREE.TextureLoader().load('textures/datas/test2.png'),
-      data3: new THREE.TextureLoader().load('textures/datas/test3.png'),
-    }
-    const test2 = {
-      data1: new THREE.TextureLoader().load('textures/datas/test3.png'),
-      data2: new THREE.TextureLoader().load('textures/datas/test2.png'),
-      data3: new THREE.TextureLoader().load('textures/datas/test1.jpg'),
-    }
-    // const test3 = {
-    //   data1: new THREE.TextureLoader().load('textures/datas/test7.jpg'),
-    //   data2: new THREE.TextureLoader().load('textures/datas/test8.jpg'),
-    //   data3: new THREE.TextureLoader().load('textures/datas/test9.jpg'),
-    // }
+    const data1 = {
+      data1: new THREE.TextureLoader().load('textures/datas/data1/data1.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/data1/data2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/data1/data3.png'),
 
+    }
+    const data2 = {
+      data1: new THREE.TextureLoader().load('textures/datas/data2/data1.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/data2/data2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/data2/data3.png'),
+    }
+    const data3 = {
+      data1: new THREE.TextureLoader().load('textures/datas/data3/data1.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/data3/data2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/data3/data3.png'),
+
+    }
+    const data4 = {
+      data1: new THREE.TextureLoader().load('textures/datas/data4/data1.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/data4/data2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/data4/data3.png'),
+    }
+    const data5 = {
+      data1: new THREE.TextureLoader().load('textures/datas/data5/data1.png'),
+      data2: new THREE.TextureLoader().load('textures/datas/data5/data2.png'),
+      data3: new THREE.TextureLoader().load('textures/datas/data5/data3.png'),
+    }
+    function resetRadial() {
+      const radialDots = document.querySelectorAll('.radial')
+      radialDots.forEach((radial) => {
+        radial.classList.remove('radial')
+      })
+
+    }
 
     const timelineDots = document.querySelectorAll('.timeline__dot');
+    function setFilter(data, target, firstData, secondData, thirdData) {
+      data.forEach((filter) => {
+        filter.addEventListener('click', (e) => {
+          console.log(e.target.classList);
+          if (e.target.classList.contains("filter1")) {
+            resetRadial()
+            filter.classList.add('radial')
+            target.visible = false;
+            setTimeout(() => {
+              target.visible = true;
+            }, 500);
+            target.material.uniforms.uTexture.value = firstData;
+          }
+          else {
+            resetRadial()
+          }
+          if (e.target.classList.contains("filter2")) {
+            resetRadial(filter)
+            filter.classList.add('radial')
+            target.visible = false;
+            setTimeout(() => {
+              target.visible = true;
+            }, 500);
+            target.material.uniforms.uTexture.value = secondData;
+            console.log('filter2');
+          }
+          if (e.target.classList.contains("filter3")) {
+            resetRadial()
+            filter.classList.add('radial')
+            target.visible = false;
+            setTimeout(() => {
+              target.visible = true;
+            }, 500);
+            target.material.uniforms.uTexture.value = thirdData;
+            console.log('filter3');
+          }
+        })
+      })
+
+    }
     timelineDots.forEach((dot) => {
 
       // change video plane uTexture on click on timeline dot
@@ -218,58 +315,21 @@ export default class Cine {
 
         const data = dot.getAttribute('data-image');
         if (data === 'data1') {
-          this.videoPlane.material.uniforms.uTexture.value = datas.data1;
-          this.filters.forEach((filter) => {
-            filter.addEventListener('click', (e) => {
-
-              if (e.target.classList.contains("filter1")) {
-                this.videoPlane.visible = false;
-                setTimeout(() => {
-                  this.videoPlane.visible = true;
-                }, 500);
-                this.videoPlane.material.uniforms.uTexture.value = test1.data1;
-              }
-              else if (e.target.classList.contains("filter2")) {
-                this.videoPlane.visible = false;
-                setTimeout(() => {
-                  this.videoPlane.visible = true;
-                }, 500);
-                this.videoPlane.material.uniforms.uTexture.value = test1.data2;
-
-              }
-              else if (e.target.classList.contains("filter3")) {
-                this.videoPlane.visible = false;
-                setTimeout(() => {
-                  this.videoPlane.visible = true;
-                }, 500);
-                this.videoPlane.material.uniforms.uTexture.value = test1.data3;
-              }
-            });
-          });
+          this.videoPlane.material.uniforms.uTexture.value = data1.data1;
+          setFilter(this.filters, this.videoPlane, data1.data1, data1.data2, data1.data3);
 
         } else if (data === 'data2') {
-          this.videoPlane.material.uniforms.uTexture.value = datas.data2;
-          this.filters.forEach((filter) => {
-            filter.addEventListener('click', (e) => {
-
-              if (e.target.classList.contains("filter1")) {
-                this.videoPlane.material.uniforms.uTexture.value = test2.data1;
-              }
-              else if (e.target.classList.contains("filter2")) {
-                this.videoPlane.material.uniforms.uTexture.value = test2.data2;
-
-              }
-              else if (e.target.classList.contains("filter3")) {
-                this.videoPlane.material.uniforms.uTexture.value = test2.data3;
-              }
-            });
-          });
+          this.videoPlane.material.uniforms.uTexture.value = data2.data1;
+          setFilter(this.filters, this.videoPlane, data2.data1, data2.data2, data2.data3);
         } else if (data === 'data3') {
-          this.videoPlane.material.uniforms.uTexture.value = datas.data3;
+          this.videoPlane.material.uniforms.uTexture.value = data3.data1;
+          setFilter(this.filters, this.videoPlane, data3.data1, data3.data2, data3.data3);
         } else if (data === 'data4') {
-          this.videoPlane.material.uniforms.uTexture.value = datas.data4;
+          this.videoPlane.material.uniforms.uTexture.value = data4.data1;
+          setFilter(this.filters, this.videoPlane, data4.data1, data4.data2, data4.data3);
         } else if (data === 'data5') {
-          this.videoPlane.material.uniforms.uTexture.value = datas.data5;
+          this.videoPlane.material.uniforms.uTexture.value = data5.data1;
+          setFilter(this.filters, this.videoPlane, data5.data1, data5.data2, data5.data3);
         }
       });
     });
@@ -314,9 +374,6 @@ export default class Cine {
           this.initCamera()
           console.log('camera');
           this.cameraButton.visible = false;
-          this.loaderPlane.visible = true
-          this.video.play();
-          this.video.loop = false;
 
         }
       })
@@ -330,10 +387,10 @@ export default class Cine {
         const normalized = this.intersectPoint.clone().normalize();
         // this.projector.rotation.y = Math.PI * 0.5
 
-        if (this.cameraInit) {
-          this.projector.rotation.y = normalized.x * -1
+        // if (this.cameraInit) {
+        //   this.projector.rotation.y = normalized.x * -1
 
-        }
+        // }
         // this.projector.rotation.z = normalized.y * 1
 
         this.spotLight.lookAt(this.intersect[0].point)
